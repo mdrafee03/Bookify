@@ -1,0 +1,25 @@
+﻿
+services:
+  bookify.api:
+    image: ${DOCKER_REGISTRY-}bookify.api
+    container_name: bookify.Api
+    build:
+      context: .
+      dockerfile: src/Bookify.Api/Dockerfile
+    depends_on:
+      - bookify.db
+  
+  bookify.db:
+    image: postgres:latest
+    container_name: Bookify.Db
+    environment:
+      - POSTGRES_DB=bookify
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres 
+    ports:
+      - "5433:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
+volumes:
+  postgres_data:
+    driver: local 
