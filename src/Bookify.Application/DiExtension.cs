@@ -16,7 +16,6 @@ public static class DiExtension
             configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
         services.AddValidatorsFromAssembly(typeof(DiExtension).Assembly);
-        services.AddTransient<PricingService>();
         return services;
     }
 }

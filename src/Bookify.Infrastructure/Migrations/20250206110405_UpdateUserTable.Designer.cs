@@ -3,6 +3,7 @@ using System;
 using Bookify.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bookify.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250206110405_UpdateUserTable")]
+    partial class UpdateUserTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,7 +234,7 @@ namespace Bookify.Infrastructure.Migrations
 
                             b1.HasKey("ApartmentId");
 
-                            b1.ToTable("apartments", (string)null);
+                            b1.ToTable("apartments");
 
                             b1.WithOwner()
                                 .HasForeignKey("ApartmentId")
@@ -255,7 +258,7 @@ namespace Bookify.Infrastructure.Migrations
 
                             b1.HasKey("ApartmentId");
 
-                            b1.ToTable("apartments", (string)null);
+                            b1.ToTable("apartments");
 
                             b1.WithOwner()
                                 .HasForeignKey("ApartmentId")
@@ -279,7 +282,7 @@ namespace Bookify.Infrastructure.Migrations
 
                             b1.HasKey("ApartmentId");
 
-                            b1.ToTable("apartments", (string)null);
+                            b1.ToTable("apartments");
 
                             b1.WithOwner()
                                 .HasForeignKey("ApartmentId")
@@ -329,7 +332,7 @@ namespace Bookify.Infrastructure.Migrations
 
                             b1.HasKey("BookingId");
 
-                            b1.ToTable("bookings", (string)null);
+                            b1.ToTable("bookings");
 
                             b1.WithOwner()
                                 .HasForeignKey("BookingId")
@@ -353,30 +356,7 @@ namespace Bookify.Infrastructure.Migrations
 
                             b1.HasKey("BookingId");
 
-                            b1.ToTable("bookings", (string)null);
-
-                            b1.WithOwner()
-                                .HasForeignKey("BookingId")
-                                .HasConstraintName("fk_bookings_bookings_id");
-                        });
-
-                    b.OwnsOne("Bookify.Domain.Bookings.DateRange", "Duration", b1 =>
-                        {
-                            b1.Property<Guid>("BookingId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<DateOnly>("End")
-                                .HasColumnType("date")
-                                .HasColumnName("duration_end");
-
-                            b1.Property<DateOnly>("Start")
-                                .HasColumnType("date")
-                                .HasColumnName("duration_start");
-
-                            b1.HasKey("BookingId");
-
-                            b1.ToTable("bookings", (string)null);
+                            b1.ToTable("bookings");
 
                             b1.WithOwner()
                                 .HasForeignKey("BookingId")
@@ -400,7 +380,7 @@ namespace Bookify.Infrastructure.Migrations
 
                             b1.HasKey("BookingId");
 
-                            b1.ToTable("bookings", (string)null);
+                            b1.ToTable("bookings");
 
                             b1.WithOwner()
                                 .HasForeignKey("BookingId")
@@ -424,7 +404,30 @@ namespace Bookify.Infrastructure.Migrations
 
                             b1.HasKey("BookingId");
 
-                            b1.ToTable("bookings", (string)null);
+                            b1.ToTable("bookings");
+
+                            b1.WithOwner()
+                                .HasForeignKey("BookingId")
+                                .HasConstraintName("fk_bookings_bookings_id");
+                        });
+
+                    b.OwnsOne("Bookify.Domain.Bookings.DateRange", "Duration", b1 =>
+                        {
+                            b1.Property<Guid>("BookingId")
+                                .HasColumnType("uuid")
+                                .HasColumnName("id");
+
+                            b1.Property<DateOnly>("End")
+                                .HasColumnType("date")
+                                .HasColumnName("duration_end");
+
+                            b1.Property<DateOnly>("Start")
+                                .HasColumnType("date")
+                                .HasColumnName("duration_start");
+
+                            b1.HasKey("BookingId");
+
+                            b1.ToTable("bookings");
 
                             b1.WithOwner()
                                 .HasForeignKey("BookingId")

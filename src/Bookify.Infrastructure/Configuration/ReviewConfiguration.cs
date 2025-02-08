@@ -11,7 +11,7 @@ internal sealed class ReviewConfiguration : IEntityTypeConfiguration<Review>
 {
     public void Configure(EntityTypeBuilder<Review> builder)
     {
-        builder.ToTable("Review");
+        builder.ToTable("reviews");
 
         builder.HasKey(review => review.Id);
 

@@ -41,7 +41,7 @@ internal sealed class SearchApartmentsQueryHandler(ISqlConnectionFactory sqlConn
                 a.address_zip_code AS ZipCode,
                 a.address_city AS City,
                 a.address_street AS Street
-            FROM public."Apartment" AS a
+            FROM apartments AS a
             WHERE NOT EXISTS
             (
                 SELECT 1

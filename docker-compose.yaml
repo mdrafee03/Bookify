@@ -1,5 +1,4 @@
-﻿
-services:
+﻿services:
   bookify.api:
     image: ${DOCKER_REGISTRY-}bookify.api
     container_name: bookify.Api

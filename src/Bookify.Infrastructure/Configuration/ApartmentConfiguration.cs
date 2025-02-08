@@ -9,7 +9,7 @@ internal sealed class ApartmentConfiguration : IEntityTypeConfiguration<Apartmen
 {
     public void Configure(EntityTypeBuilder<Apartment> builder)
     {
-        builder.ToTable("Apartment");
+        builder.ToTable("apartments");
 
         builder.HasKey(apartment => apartment.Id);
 
