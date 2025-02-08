@@ -38,11 +38,22 @@ internal sealed class GetBookingQueryHandler(ISqlConnectionFactory sqlConnection
             WHERE id = @BookingId
             """;
 
-        var booking = await connection.QueryFirstOrDefaultAsync<BookingResponse>(
+        var command = new CommandDefinition(
             sql,
-            new { request.BookingId }
+            new { request.BookingId },
+            cancellationToken: cancellationToken
         );
 
-        throw new NotImplementedException();
+        try
+        {
+            var booking = await connection.QueryFirstOrDefaultAsync<BookingResponse>(command);
+
+            return booking;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }

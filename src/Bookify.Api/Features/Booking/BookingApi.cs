@@ -20,11 +20,12 @@ public sealed class BookingApi : ICarterModule
 
     private static async Task<Results<Ok<BookingResponse>, NotFound<Error>>> GetBooking(
         Guid bookingId,
-        ISender sender
+        ISender sender,
+        CancellationToken cancellationToken
     )
     {
         var query = new GetBookingQuery(bookingId);
-        var result = await sender.Send(query);
+        var result = await sender.Send(query, cancellationToken);
 
         if (result.IsFailure)
         {
@@ -35,7 +36,8 @@ public sealed class BookingApi : ICarterModule
 
     private static async Task<Results<Ok<Guid>, BadRequest<Error>>> ReserveBooking(
         ReserveBookingRequest request,
-        ISender sender
+        ISender sender,
+        CancellationToken cancellationToken
     )
     {
         var command = new ReserveBookingCommand(
@@ -44,7 +46,7 @@ public sealed class BookingApi : ICarterModule
             request.StartDate,
             request.EndDate
         );
-        var result = await sender.Send(command);
+        var result = await sender.Send(command, cancellationToken);
 
         if (result.IsFailure)
         {

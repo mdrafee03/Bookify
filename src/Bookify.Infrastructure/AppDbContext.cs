@@ -23,9 +23,6 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IPublis
 
     public DbSet<Review> Reviews { get; set; }
 
-    // private AppDbContext()
-    //     : this(new DbContextOptions<AppDbContext>(), null!) { }
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
