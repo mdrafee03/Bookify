@@ -1,6 +1,6 @@
 ﻿
 services:
-  bookify.api:
+  bookify-api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_HTTP_PORTS=5150

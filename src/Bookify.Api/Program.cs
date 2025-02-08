@@ -15,13 +15,17 @@ builder.Services.AddCarter();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
         options.WithTheme(ScalarTheme.Mars);
+        options.Servers =
+        [
+            new ScalarServer("https://localhost:7039"),
+            new ScalarServer("http://localhost:5150"),
+        ];
     });
     app.ApplyMigrations();
     // app.SeedData();
@@ -30,6 +34,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCustomExceptionHandler();
+
+app.UseAuthentication();
+
+app.UseAuthorization();
 
 app.MapCarter();
 
