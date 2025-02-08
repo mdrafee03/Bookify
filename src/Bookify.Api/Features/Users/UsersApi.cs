@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Bookify.Api.Features.Users;
 
-public class UsersModule : ICarterModule
+public class UsersApi : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {

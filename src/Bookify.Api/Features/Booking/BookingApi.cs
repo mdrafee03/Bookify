@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Bookify.Api.Features.Booking;
 
-public sealed class BookingModule : ICarterModule
+public sealed class BookingApi : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
