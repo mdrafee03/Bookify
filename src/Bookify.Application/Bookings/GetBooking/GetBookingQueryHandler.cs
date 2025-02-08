@@ -52,7 +52,7 @@ internal sealed class GetBookingQueryHandler(ISqlConnectionFactory sqlConnection
         }
         catch (Exception e)
         {
-            Console.WriteLine(e);
+            // return Result.Failure<BookingResponse>(BookingErrors.Overlap);
             throw;
         }
     }

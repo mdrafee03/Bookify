@@ -1,3 +1,4 @@
+using Bookify.Application.Abstractions.Authentication;
 using Bookify.Application.Abstractions.Clock;
 using Bookify.Application.Abstractions.Data;
 using Bookify.Application.Abstractions.Email;
@@ -16,9 +17,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using AuthenticationOptions = Bookify.Infrastructure.Authentication.AuthenticationOptions;
-using AuthenticationService = Bookify.Infrastructure.Authentication.AuthenticationService;
-using IAuthenticationService = Bookify.Application.Abstractions.Authentication.IAuthenticationService;
 
 namespace Bookify.Infrastructure;
 
@@ -37,6 +35,32 @@ public static class DiExtension
         AddAuthentication(services, configuration);
 
         return services;
+    }
+
+    private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
+    {
+        var connectionString =
+            configuration.GetConnectionString("Database")
+            ?? throw new ArgumentNullException(nameof(configuration));
+
+        services.AddDbContext<AppDbContext>(options =>
+        {
+            options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
+        });
+
+        services.AddScoped<IUserRepository, UserRepository>();
+
+        services.AddScoped<IApartmentRepository, ApartmentRepository>();
+
+        services.AddScoped<IBookingRepository, BookingRepository>();
+
+        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
+
+        services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(
+            connectionString
+        ));
+
+        SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
     }
 
     private static void AddAuthentication(IServiceCollection services, IConfiguration configuration)
@@ -67,31 +91,15 @@ public static class DiExtension
                 }
             )
             .AddHttpMessageHandler<AdminAuthorizationDelegatingHandler>();
-    }
 
-    private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
-    {
-        var connectionString =
-            configuration.GetConnectionString("Database")
-            ?? throw new ArgumentNullException(nameof(configuration));
-
-        services.AddDbContext<AppDbContext>(options =>
-        {
-            options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
-        });
-
-        services.AddScoped<IUserRepository, UserRepository>();
-
-        services.AddScoped<IApartmentRepository, ApartmentRepository>();
-
-        services.AddScoped<IBookingRepository, BookingRepository>();
-
-        services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
-
-        services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(
-            connectionString
-        ));
-
-        SqlMapper.AddTypeHandler(new DateOnlyTypeHandler());
+        services.AddHttpClient<IJwtService, JwtService>(
+            (serviceProvider, httpClient) =>
+            {
+                var keycloakOptions = serviceProvider
+                    .GetRequiredService<IOptions<KeycloakOptions>>()
+                    .Value;
+                httpClient.BaseAddress = new Uri(keycloakOptions.TokenUrl);
+            }
+        );
     }
 }

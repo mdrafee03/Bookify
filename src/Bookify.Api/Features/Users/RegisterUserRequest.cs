@@ -5,4 +5,4 @@ public sealed record RegisterUserRequest(
     string LastName,
     string Email,
     string Password
-) { };
+);
