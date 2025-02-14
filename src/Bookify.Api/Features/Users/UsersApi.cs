@@ -1,3 +1,5 @@
+using Bookify.Application.Users.GetLoggedInUser;
+using Bookify.Application.Users.LoginUser;
 using Bookify.Application.Users.RegisterUser;
 using Bookify.Domain.Abstractions;
 using Carter;
@@ -12,7 +14,8 @@ public sealed class UsersApi : ICarterModule
     {
         var users = app.MapGroup("users");
 
-        users.MapGet("/{id}", (string id, ISender sender) => { });
+        users.MapGet("/me", GetLoggedInUser).RequireAuthorization();
+        users.MapPost("/login", Login);
         users.MapPost("/register", RegisterUser);
     }
 

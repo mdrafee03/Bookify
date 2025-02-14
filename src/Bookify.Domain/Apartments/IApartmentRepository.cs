@@ -1,9 +1,9 @@
+using Bookify.Domain.Abstractions;
+
 namespace Bookify.Domain.Apartments;
 
-public interface IApartmentRepository
+public interface IApartmentRepository : IRepository<Apartment>
 {
-    Task<Apartment?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-    void Add(Apartment apartment);
     Task UpdateAsync(Apartment apartment, CancellationToken cancellationToken = default);
     Task DeleteAsync(Apartment apartment, CancellationToken cancellationToken = default);
 }

@@ -17,6 +17,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using AuthenticationOptions = Bookify.Infrastructure.Authentication.AuthenticationOptions;
+using AuthenticationService = Bookify.Infrastructure.Authentication.AuthenticationService;
+using IAuthenticationService = Bookify.Application.Abstractions.Authentication.IAuthenticationService;
 
 namespace Bookify.Infrastructure;
 
@@ -33,6 +36,8 @@ public static class DiExtension
         AddPersistence(services, configuration);
 
         AddAuthentication(services, configuration);
+
+        AddAuthorizationServices(services);
 
         return services;
     }
@@ -67,13 +72,9 @@ public static class DiExtension
     {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
 
-        services.AddAuthorization();
-
         services.Configure<AuthenticationOptions>(configuration.GetSection("Authentication"));
 
         services.ConfigureOptions<JwtBearerOptionsSetup>();
-
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
 
         services.Configure<KeycloakOptions>(configuration.GetSection("Keycloak"));
 
@@ -101,5 +102,10 @@ public static class DiExtension
                 httpClient.BaseAddress = new Uri(keycloakOptions.TokenUrl);
             }
         );
+    }
+
+    private static void AddAuthorizationServices(this IServiceCollection services)
+    {
+        services.AddAuthorizationBuilder();
     }
 }
