@@ -1,3 +1,4 @@
+using Bookify.Application.Users.ChangeUserRole;
 using Bookify.Application.Users.GetLoggedInUser;
 using Bookify.Application.Users.LoginUser;
 using Bookify.Application.Users.RegisterUser;
@@ -19,6 +20,9 @@ public sealed class UsersApi : ICarterModule
             .RequireAuthorization(policy => policy.RequireRole(Roles.Registered));
         users.MapPost("/login", Login);
         users.MapPost("/register", RegisterUser);
+        users
+            .MapPut("/change-role", ChangeUserRole)
+            .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
     }
 
     private static async Task<Results<Ok<UserResponse>, BadRequest<Error>>> GetLoggedInUser(
@@ -74,5 +78,22 @@ public sealed class UsersApi : ICarterModule
         }
 
         return TypedResults.Ok(result.Value);
+    }
+
+    private static async Task<IResult> ChangeUserRole(
+        ChangeUserRoleRequest request,
+        ISender sender,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new ChangeUserRoleCommand(request.UserId, request.Role);
+        var result = await sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return TypedResults.BadRequest(result.Error);
+        }
+
+        return TypedResults.Ok();
     }
 }

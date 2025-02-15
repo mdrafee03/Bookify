@@ -9,7 +9,7 @@ internal sealed class RegisterUserCommandHandler(
     IUserRepository userRepository,
     IUnitOfWork unitOfWork,
     IAuthenticationService authenticationService
-) : ICommandHander<RegisterUserCommand, Guid>
+) : ICommandHandler<RegisterUserCommand, Guid>
 {
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;

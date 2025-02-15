@@ -14,7 +14,7 @@ public abstract class Entity(Guid id)
         _domainEvents.Add(domainEvent);
     }
 
-    public IReadOnlyList<IDomainEvent> GetDomainEvents() => _domainEvents;
+    public IReadOnlyList<IDomainEvent> GetDomainEvents() => _domainEvents.ToList();
 
     public void ClearDomainEvents() => _domainEvents.Clear();
 }

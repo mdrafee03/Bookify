@@ -14,7 +14,7 @@ internal sealed class ReserveBookingCommandHandler(
     IBookingRepository bookingRepository,
     IUnitOfWork unitOfWork,
     IDateTimeProvider dateTimeProvider
-) : ICommandHander<ReserveBookingCommand, Guid>
+) : ICommandHandler<ReserveBookingCommand, Guid>
 {
     private readonly IApartmentRepository _apartmentRepository = apartmentRepository;
     private readonly IUserRepository _userRepository = userRepository;

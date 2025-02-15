@@ -15,13 +15,15 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IPublis
 {
     private readonly IPublisher _publisher = publisher;
 
-    public DbSet<Apartment> Apartments { get; set; }
+    public DbSet<Apartment> Apartments { get; init; }
 
-    public DbSet<User> Users { get; set; }
+    public DbSet<User> Users { get; init; }
 
-    public DbSet<Booking> Bookings { get; set; }
+    public DbSet<Booking> Bookings { get; init; }
 
-    public DbSet<Review> Reviews { get; set; }
+    public DbSet<Review> Reviews { get; init; }
+
+    public DbSet<Role> Roles { get; init; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

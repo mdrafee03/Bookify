@@ -6,7 +6,7 @@ using Bookify.Domain.Users;
 namespace Bookify.Application.Users.LoginUser;
 
 internal sealed class LoginUserCommandHandler(IJwtService jwtService)
-    : ICommandHander<LoginUserCommand, AccessTokenResponse>
+    : ICommandHandler<LoginUserCommand, AccessTokenResponse>
 {
     private readonly IJwtService _jwtService = jwtService;
 
