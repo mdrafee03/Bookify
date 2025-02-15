@@ -1,12 +1,12 @@
 ﻿services:
-  bookify-api:
-    image: ${DOCKER_REGISTRY-}bookify.api
-    container_name: bookify.Api
-    build:
-      context: .
-      dockerfile: src/Bookify.Api/Dockerfile
-    depends_on:
-      - bookify-db
+#  bookify-api:
+#    image: ${DOCKER_REGISTRY-}bookify.api
+#    container_name: bookify.Api
+#    build:
+#      context: .
+#      dockerfile: src/Bookify.Api/Dockerfile
+#    depends_on:
+#      - bookify-db
   
   bookify-db:
     image: postgres:latest

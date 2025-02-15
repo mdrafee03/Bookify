@@ -15,7 +15,7 @@ internal abstract class Repository<T>(AppDbContext dbContext)
             .FirstOrDefaultAsync(entity => entity.Id == id, cancellationToken);
     }
 
-    public void Add(T entity)
+    public virtual void Add(T entity)
     {
         DbContext.Set<T>().Add(entity);
     }

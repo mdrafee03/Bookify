@@ -1,11 +1,11 @@
 ﻿
-services:
-  bookify-api:
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_HTTP_PORTS=5150
-      - ASPNETCORE_HTTPS_PORTS=7039
-      - ASPNETCORE_URLS=http://+:5150;https://+:7039
-    ports:
-      - "5150:5150"
-      - "7039:7039" 
+#services:
+#  bookify-api:
+#    environment:
+#      - ASPNETCORE_ENVIRONMENT=Development
+#      - ASPNETCORE_HTTP_PORTS=5150
+#      - ASPNETCORE_HTTPS_PORTS=7039
+#      - ASPNETCORE_URLS=http://+:5150;https://+:7039
+#    ports:
+#      - "5150:5150"
+#      - "7039:7039" 

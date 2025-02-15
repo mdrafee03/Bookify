@@ -1,3 +1,4 @@
+using Bookify.Application.Abstractions.Authentication;
 using Bookify.Application.Abstractions.Data;
 using Bookify.Application.Abstractions.Messaging;
 using Bookify.Domain.Abstractions;
@@ -6,10 +7,13 @@ using Dapper;
 
 namespace Bookify.Application.Users.GetLoggedInUser;
 
-internal sealed class GetLoggedInUserQueryHandler(ISqlConnectionFactory connectionFactory)
-    : IQueryHandler<GetLoggedInUserQuery, UserResponse>
+internal sealed class GetLoggedInUserQueryHandler(
+    ISqlConnectionFactory connectionFactory,
+    IUserContext userContext
+) : IQueryHandler<GetLoggedInUserQuery, UserResponse>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactoryFactory = connectionFactory;
+    private readonly IUserContext _userContext = userContext;
 
     public async Task<Result<UserResponse>> Handle(
         GetLoggedInUserQuery request,
@@ -18,7 +22,6 @@ internal sealed class GetLoggedInUserQueryHandler(ISqlConnectionFactory connecti
     {
         var connection = _sqlConnectionFactoryFactory.CreateConnection();
 
-        const string identityId = "1234";
         const string sql = """
             SELECT
                 u.id AS Id,
@@ -31,7 +34,7 @@ internal sealed class GetLoggedInUserQueryHandler(ISqlConnectionFactory connecti
 
         var command = new CommandDefinition(
             sql,
-            new { IdentityId = identityId },
+            new { _userContext.IdentityId },
             cancellationToken: cancellationToken
         );
 
