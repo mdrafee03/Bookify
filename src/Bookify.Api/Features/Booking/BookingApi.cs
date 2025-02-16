@@ -13,7 +13,9 @@ public sealed class BookingApi : ICarterModule
     {
         var bookings = app.MapGroup("bookings");
 
-        bookings.MapGet("/{bookingId:guid}", GetBooking);
+        bookings
+            .MapGet("/{bookingId:guid}", GetBooking)
+            .RequireAuthorization(Permissions.UsersRead);
 
         bookings.MapPost("/reserveBooking", ReserveBooking);
     }

@@ -13,14 +13,9 @@ public static class ClaimPrincipalExtensions
             throw new InvalidOperationException("User id claim is missing");
         }
 
-        try
-        {
-            return Guid.Parse(userId);
-        }
-        catch (Exception e)
-        {
-            throw new InvalidOperationException("UserId is not parsable", e);
-        }
+        return Guid.TryParse(userId, out var parsedUserId)
+            ? parsedUserId
+            : throw new InvalidOperationException("User id is not parsable");
     }
 
     public static string GetIdentityId(this ClaimsPrincipal principal)
