@@ -3,6 +3,7 @@ using System;
 using Bookify.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Bookify.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250216063640_AddPermissionTable")]
+    partial class AddPermissionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -185,7 +188,7 @@ namespace Bookify.Infrastructure.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Users:Read"
+                            Name = "UsersRead"
                         });
                 });
 
@@ -586,7 +589,7 @@ namespace Bookify.Infrastructure.Migrations
                         .HasForeignKey("PermissionsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_permission_user_permissions_permissions_id");
+                        .HasConstraintName("fk_permission_user_permission_permissions_id");
 
                     b.HasOne("Bookify.Domain.Users.User", null)
                         .WithMany()

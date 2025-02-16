@@ -1,3 +1,4 @@
+using Bookify.Application.Users.AssignPermission;
 using Bookify.Application.Users.ChangeUserRole;
 using Bookify.Application.Users.GetLoggedInUser;
 using Bookify.Application.Users.LoginUser;
@@ -22,6 +23,9 @@ public sealed class UsersApi : ICarterModule
         users.MapPost("/register", RegisterUser);
         users
             .MapPut("/change-role", ChangeUserRole)
+            .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
+        users
+            .MapPut("/assign-permissions", AssignUserPermissions)
             .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
     }
 
@@ -95,5 +99,22 @@ public sealed class UsersApi : ICarterModule
         }
 
         return TypedResults.Ok();
+    }
+
+    private static async Task<IResult> AssignUserPermissions(
+        AssignPermissionsRequest request,
+        ISender sender,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new AssignPermissionCommand(request.UserId, request.Permissions);
+        var result = await sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return TypedResults.BadRequest(result.Error);
+        }
+
+        return TypedResults.NoContent();
     }
 }

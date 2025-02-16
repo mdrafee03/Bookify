@@ -42,4 +42,33 @@ internal sealed class UserRepository(AppDbContext dbContext)
 
         DbContext.Update(user);
     }
+
+    public async Task AssignPermissionAsync(
+        Guid userId,
+        IEnumerable<string> permissions,
+        CancellationToken cancellationToken
+    )
+    {
+        var user = await DbContext
+            .Users.Include(user => user.Permissions)
+            .FirstOrDefaultAsync(entity => entity.Id == userId, cancellationToken);
+
+        if (user is null)
+        {
+            throw new EntityNotFoundException<User>();
+        }
+
+        var permissionList = await DbContext
+            .Permissions.Where(entity => permissions.Contains(entity.Name.ToLower()))
+            .ToListAsync(cancellationToken);
+
+        if (permissionList is null)
+        {
+            throw new EntityNotFoundException<Role>();
+        }
+
+        user.AssignPermissions(permissionList);
+
+        DbContext.Update(user);
+    }
 }
