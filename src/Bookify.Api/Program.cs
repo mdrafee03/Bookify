@@ -3,8 +3,13 @@ using Bookify.Application;
 using Bookify.Infrastructure;
 using Carter;
 using Scalar.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Host.UseSerilog(
+    ((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
+);
 
 builder.Services.AddOpenApi();
 
@@ -32,6 +37,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// app.UseSerilogRequestLogging();
+app.UseRequestContextLogging();
 
 app.UseCustomExceptionHandler();
 
