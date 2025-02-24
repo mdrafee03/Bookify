@@ -1,3 +1,4 @@
+using Bookify.Api;
 using Bookify.Api.Extensions;
 using Bookify.Application;
 using Bookify.Infrastructure;
@@ -11,7 +12,13 @@ builder.Host.UseSerilog(
     ((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
 );
 
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(
+    "v1",
+    options =>
+    {
+        options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+    }
+);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
