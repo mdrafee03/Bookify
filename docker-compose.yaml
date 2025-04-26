@@ -40,6 +40,14 @@
       - "8081:80"
     environment:
       - ACCEPT_EULA=Y
+  bookify-redis:
+    image: redis:latest
+    container_name: Bookify.Redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
 volumes:
   postgres_data:
   keycloak_data:
+  redis_data:

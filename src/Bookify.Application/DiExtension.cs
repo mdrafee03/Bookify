@@ -14,6 +14,7 @@ public static class DiExtension
             configuration.RegisterServicesFromAssembly(typeof(DiExtension).Assembly);
             configuration.AddOpenBehavior(typeof(LoggingBehavior<,>));
             configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            configuration.AddOpenBehavior(typeof(QueryCachingBehavior<,>));
         });
         services.AddValidatorsFromAssembly(typeof(DiExtension).Assembly);
         return services;

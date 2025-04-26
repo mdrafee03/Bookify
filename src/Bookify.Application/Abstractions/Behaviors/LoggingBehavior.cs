@@ -23,7 +23,7 @@ public class LoggingBehavior<TRequest, TResponse>(
         {
             var name = request.GetType().Name;
 
-            _logger.LogInformation("Handling request {Request} ({@Command})", name, request);
+            _logger.LogInformation("Handling request {RequestName} ({@Request})", name, request);
 
             var result = await next();
 

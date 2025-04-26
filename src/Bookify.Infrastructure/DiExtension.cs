@@ -1,4 +1,5 @@
 using Bookify.Application.Abstractions.Authentication;
+using Bookify.Application.Abstractions.Caching;
 using Bookify.Application.Abstractions.Clock;
 using Bookify.Application.Abstractions.Data;
 using Bookify.Application.Abstractions.Email;
@@ -8,6 +9,7 @@ using Bookify.Domain.Bookings;
 using Bookify.Domain.Users;
 using Bookify.Infrastructure.Authentication;
 using Bookify.Infrastructure.Authorization;
+using Bookify.Infrastructure.Caching;
 using Bookify.Infrastructure.Clock;
 using Bookify.Infrastructure.Data;
 using Bookify.Infrastructure.Email;
@@ -41,6 +43,8 @@ public static class DiExtension
         AddAuthentication(services, configuration);
 
         AddAuthorizationServices(services);
+
+        AddCaching(services, configuration);
 
         return services;
     }
@@ -120,5 +124,18 @@ public static class DiExtension
             PermissionAuthorizationPolicyProvider
         >();
         services.AddAuthorization();
+    }
+
+    private static void AddCaching(this IServiceCollection services, IConfiguration configuration)
+    {
+        var redisConnectionString =
+            configuration.GetConnectionString("Redis")
+            ?? throw new ArgumentNullException(nameof(configuration));
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = redisConnectionString;
+        });
+
+        services.AddScoped<ICacheService, CacheService>();
     }
 }
