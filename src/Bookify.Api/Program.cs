@@ -1,8 +1,11 @@
 using Bookify.Api;
 using Bookify.Api.Extensions;
+using Bookify.Api.HealthCheck;
 using Bookify.Application;
 using Bookify.Infrastructure;
 using Carter;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Scalar.AspNetCore;
 using Serilog;
 
@@ -24,6 +27,11 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddCarter();
+
+builder
+    .Services.AddHealthChecks()
+    .AddCheck<SqlHealthCheck>("sql-health")
+    .AddCheck<RedisCacheHealthCheck>("redis-health");
 
 var app = builder.Build();
 
@@ -55,5 +63,10 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapCarter();
+
+app.MapHealthChecks(
+    "/health",
+    new HealthCheckOptions { ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse }
+);
 
 app.Run();
