@@ -1,6 +1,5 @@
 using Bookify.Api;
 using Bookify.Api.Extensions;
-using Bookify.Api.HealthCheck;
 using Bookify.Application;
 using Bookify.Infrastructure;
 using Carter;
@@ -27,11 +26,6 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddCarter();
-
-builder
-    .Services.AddHealthChecks()
-    .AddCheck<SqlHealthCheck>("sql-health")
-    .AddCheck<RedisCacheHealthCheck>("redis-health");
 
 var app = builder.Build();
 

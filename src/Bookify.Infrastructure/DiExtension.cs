@@ -46,6 +46,8 @@ public static class DiExtension
 
         AddCaching(services, configuration);
 
+        AddhealthChecks(services, configuration);
+
         return services;
     }
 
@@ -137,5 +139,18 @@ public static class DiExtension
         });
 
         services.AddScoped<ICacheService, CacheService>();
+    }
+
+    private static void AddhealthChecks(
+        this IServiceCollection services,
+        IConfiguration configuration
+    )
+    {
+        services
+            .AddHealthChecks()
+            .AddNpgSql(configuration.GetConnectionString("Database")!)
+            .AddRedis(configuration.GetConnectionString("Redis")!)
+            .AddUrlGroup(new Uri(configuration["Keycloak:BaseUrl"]!), HttpMethod.Get, "keyCloak")
+            .AddUrlGroup(new Uri(configuration["Seq:Url"]!), HttpMethod.Get, "Seq");
     }
 }
