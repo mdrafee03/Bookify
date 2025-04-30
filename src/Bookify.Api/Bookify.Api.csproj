@@ -17,7 +17,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Scalar.AspNetCore" Version="2.0.11" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.2.1" />
         
         <!-- Workaround for EF core -->
         <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.12.0" />

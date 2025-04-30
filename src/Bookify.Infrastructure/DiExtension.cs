@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Bookify.Application.Abstractions.Authentication;
 using Bookify.Application.Abstractions.Caching;
 using Bookify.Application.Abstractions.Clock;
@@ -46,7 +47,9 @@ public static class DiExtension
 
         AddCaching(services, configuration);
 
-        AddhealthChecks(services, configuration);
+        AddHealthChecks(services, configuration);
+
+        AddApiVersioning(services);
 
         return services;
     }
@@ -141,7 +144,7 @@ public static class DiExtension
         services.AddScoped<ICacheService, CacheService>();
     }
 
-    private static void AddhealthChecks(
+    private static void AddHealthChecks(
         this IServiceCollection services,
         IConfiguration configuration
     )
@@ -152,5 +155,20 @@ public static class DiExtension
             .AddRedis(configuration.GetConnectionString("Redis")!)
             .AddUrlGroup(new Uri(configuration["Keycloak:BaseUrl"]!), HttpMethod.Get, "keyCloak")
             .AddUrlGroup(new Uri(configuration["Seq:Url"]!), HttpMethod.Get, "Seq");
+    }
+
+    private static void AddApiVersioning(this IServiceCollection services)
+    {
+        services
+            .AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1);
+                options.ApiVersionReader = new UrlSegmentApiVersionReader();
+            })
+            .AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'V";
+                options.SubstituteApiVersionInUrl = true;
+            });
     }
 }

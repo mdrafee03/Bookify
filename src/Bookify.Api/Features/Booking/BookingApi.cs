@@ -11,16 +11,30 @@ public sealed class BookingApi : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var bookings = app.MapGroup("bookings");
+        var bookings = app.MapGroup("/bookings");
 
-        bookings
-            .MapGet("/{bookingId:guid}", GetBooking)
-            .RequireAuthorization(Permissions.UsersRead);
-
+        bookings.MapGet("/{bookingId:guid}", GetBooking).MapToApiVersion(1);
+        bookings.MapGet("/{bookingId:guid}", GetBookingV2).MapToApiVersion(2);
         bookings.MapPost("/reserveBooking", ReserveBooking);
     }
 
     private static async Task<Results<Ok<BookingResponse>, NotFound<Error>>> GetBooking(
+        Guid bookingId,
+        ISender sender,
+        CancellationToken cancellationToken
+    )
+    {
+        var query = new GetBookingQuery(bookingId);
+        var result = await sender.Send(query, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return TypedResults.NotFound(result.Error);
+        }
+        return TypedResults.Ok(result.Value);
+    }
+
+    private static async Task<Results<Ok<BookingResponse>, NotFound<Error>>> GetBookingV2(
         Guid bookingId,
         ISender sender,
         CancellationToken cancellationToken
