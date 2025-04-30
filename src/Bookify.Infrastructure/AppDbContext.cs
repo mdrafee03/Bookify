@@ -1,19 +1,26 @@
+using Bookify.Application.Abstractions.Clock;
 using Bookify.Application.Exceptions;
 using Bookify.Domain.Abstractions;
 using Bookify.Domain.Apartments;
 using Bookify.Domain.Bookings;
 using Bookify.Domain.Reviews;
 using Bookify.Domain.Users;
-using MediatR;
+using Bookify.Infrastructure.Outbox;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 namespace Bookify.Infrastructure;
 
-public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IPublisher publisher)
-    : DbContext(options),
-        IUnitOfWork
+public sealed class AppDbContext(
+    DbContextOptions<AppDbContext> options,
+    IDateTimeProvider dateTimeProvider
+) : DbContext(options), IUnitOfWork
 {
-    private readonly IPublisher _publisher = publisher;
+    private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
+    private readonly JsonSerializerSettings _jsonSerializerSettings = new()
+    {
+        TypeNameHandling = TypeNameHandling.All,
+    };
 
     public DbSet<Apartment> Apartments { get; init; }
 
@@ -36,9 +43,8 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IPublis
     {
         try
         {
+            AddDomainAsOutboxMessages();
             var result = await base.SaveChangesAsync(cancellationToken);
-
-            await PublishDomainEventsAsync();
 
             return result;
         }
@@ -48,9 +54,9 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IPublis
         }
     }
 
-    private async Task PublishDomainEventsAsync()
+    private void AddDomainAsOutboxMessages()
     {
-        var domainEvents = ChangeTracker
+        var outboxMessages = ChangeTracker
             .Entries<Entity>()
             .Select(entry => entry.Entity)
             .SelectMany(entity =>
@@ -61,11 +67,14 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options, IPublis
 
                 return domainEvents;
             })
+            .Select(domainEvent => new OutboxMessage(
+                Guid.NewGuid(),
+                _dateTimeProvider.UtcNow,
+                domainEvent.GetType().Name,
+                JsonConvert.SerializeObject(domainEvent, _jsonSerializerSettings)
+            ))
             .ToList();
 
-        foreach (var domainEvent in domainEvents)
-        {
-            await _publisher.Publish(domainEvent);
-        }
+        AddRange(outboxMessages);
     }
 }
