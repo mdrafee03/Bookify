@@ -25,8 +25,8 @@ internal sealed class BookingRepository(AppDbContext dbContext)
             booking =>
                 booking.ApartmentId == apartment.Id
                 && ActiveBookingStatuses.Contains(booking.Status)
-                && booking.Duration.Start <= duration.End
-                && booking.Duration.End >= duration.Start,
+                && booking.Duration.Start < duration.End
+                && booking.Duration.End > duration.Start,
             cancellationToken
         );
     }

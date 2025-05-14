@@ -138,10 +138,10 @@ public class Booking : Entity
 
         var currentDate = DateOnly.FromDateTime(utcNow);
 
-        if (currentDate > Duration.Start)
-        {
-            return Result.Failure(BookingErrors.AlreadyStarted);
-        }
+        // if (currentDate > Duration.Start)
+        // {
+        //     return Result.Failure(BookingErrors.AlreadyStarted);
+        // }
 
         Status = BookingStatus.Canceled;
         CanceledOnUtc = utcNow;

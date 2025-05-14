@@ -13,4 +13,7 @@ public static class BookingErrors
         new("Booking.NotConfirmed", "The booking is not confirmed.");
     public static Error AlreadyStarted =>
         new("Booking.AlreadyStarted", "The booking has already started.");
+
+    public static Error NotAuthorized =>
+        new("Booking.NotAuthorized", "The user is not authorized to perform this action.");
 }
