@@ -1,9 +1,11 @@
+using Bookify.Application.Bookings.CancelBookingCommand;
 using Bookify.Application.Bookings.GetBooking;
 using Bookify.Application.Bookings.ReserveBooking;
 using Bookify.Domain.Abstractions;
 using Carter;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Bookify.Api.Features.Booking;
 
@@ -15,7 +17,8 @@ public sealed class BookingApi : ICarterModule
 
         bookings.MapGet("/{bookingId:guid}", GetBooking).MapToApiVersion(1);
         bookings.MapGet("/{bookingId:guid}", GetBookingV2).MapToApiVersion(2);
-        bookings.MapPost("/reserveBooking", ReserveBooking);
+        bookings.MapPost("/reserve-booking", ReserveBooking);
+        bookings.MapPost("/cancel-booking", CancelBooking);
     }
 
     private static async Task<Results<Ok<BookingResponse>, NotFound<Error>>> GetBooking(
@@ -31,6 +34,7 @@ public sealed class BookingApi : ICarterModule
         {
             return TypedResults.NotFound(result.Error);
         }
+
         return TypedResults.Ok(result.Value);
     }
 
@@ -47,6 +51,7 @@ public sealed class BookingApi : ICarterModule
         {
             return TypedResults.NotFound(result.Error);
         }
+
         return TypedResults.Ok(result.Value);
     }
 
@@ -70,5 +75,22 @@ public sealed class BookingApi : ICarterModule
         }
 
         return TypedResults.Ok(result.Value);
+    }
+
+    private static async Task<IResult> CancelBooking(
+        [FromBody] CancelBookingRequest request,
+        ISender sender,
+        CancellationToken cancellationToken
+    )
+    {
+        var command = new CancelBookingCommand(request.BookingId);
+        var result = await sender.Send(command, cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return TypedResults.BadRequest(result.Error);
+        }
+
+        return TypedResults.Ok();
     }
 }
