@@ -3,8 +3,8 @@ namespace Bookify.Domain.Shared;
 public record Currency
 {
     internal static readonly Currency None = new("");
-    private static readonly Currency Usd = new("USD");
-    private static readonly Currency Eur = new("EUR");
+    public static readonly Currency Usd = new("USD");
+    public static readonly Currency Eur = new("EUR");
 
     private Currency(string code) => Code = code;
 

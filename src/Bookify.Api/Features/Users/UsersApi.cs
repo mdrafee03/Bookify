@@ -1,5 +1,6 @@
 using Bookify.Application.Users.AssignPermission;
 using Bookify.Application.Users.ChangeUserRole;
+using Bookify.Application.Users.GetAllUsers;
 using Bookify.Application.Users.GetLoggedInUser;
 using Bookify.Application.Users.LoginUser;
 using Bookify.Application.Users.RegisterUser;
@@ -16,6 +17,8 @@ public sealed class UsersApi : ICarterModule
     {
         var users = app.MapGroup("users");
 
+        users.MapGet("/", GetAllUsers)
+            .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
         users
             .MapGet("/me", GetLoggedInUser)
             .RequireAuthorization(policy => policy.RequireAuthenticatedUser());
@@ -27,6 +30,7 @@ public sealed class UsersApi : ICarterModule
         users
             .MapPut("/assign-permissions", AssignUserPermissions)
             .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
+        
     }
 
     private static async Task<Results<Ok<UserResponse>, BadRequest<Error>>> GetLoggedInUser(
@@ -116,5 +120,20 @@ public sealed class UsersApi : ICarterModule
         }
 
         return TypedResults.NoContent();
+    }
+    
+    private static async Task<IResult> GetAllUsers(
+        ISender sender,
+        CancellationToken cancellationToken
+    )
+    {
+        var result = await sender.Send(new GetAllUsersQuery(), cancellationToken);
+
+        if (result.IsFailure)
+        {
+            return TypedResults.BadRequest(result.Error);
+        }
+
+        return TypedResults.Ok(result.Value);
     }
 }
