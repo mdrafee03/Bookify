@@ -9,14 +9,14 @@ using Microsoft.Extensions.Logging;
 namespace Bookify.Application.Bookings.CompleteBooking;
 
 internal sealed class CompleteBookingCommandHandler(
-    ILogger<ConfirmBookingCommandHandler> logger,
+    ILogger<CompleteBookingCommandHandler> logger,
     IUnitOfWork unitOfWork,
     IDateTimeProvider dateTimeProvider,
     IBookingRepository bookingRepository,
     IUserContext userContext
 ) : ICommandHandler<CompleteBookingCommand>
 {
-    private readonly ILogger<ConfirmBookingCommandHandler> _logger = logger;
+    private readonly ILogger<CompleteBookingCommandHandler> _logger = logger;
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
     private readonly IBookingRepository _bookingRepository = bookingRepository;

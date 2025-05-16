@@ -10,9 +10,9 @@ namespace Bookify.Application.Bookings.CancelBooking;
 internal sealed class CancelBookingCommandHandler(
     ILogger<CancelBookingCommandHandler> logger,
     IUnitOfWork unitOfWork,
+    IDateTimeProvider dateTimeProvider,
     IBookingRepository bookingRepository,
-    IUserContext userContext,
-    IDateTimeProvider dateTimeProvider
+    IUserContext userContext
 ) : ICommandHandler<CancelBooking.CancelBookingCommand>
 {
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
@@ -35,7 +35,7 @@ internal sealed class CancelBookingCommandHandler(
 
         if (booking.UserId != _userContext.UserId)
         {
-            return Result.Failure<bool>(BookingErrors.NotFound);
+            return Result.Failure<bool>(BookingErrors.NotAuthorized);
         }
 
         var result = booking.Cancel(_dateTimeProvider.UtcNow);

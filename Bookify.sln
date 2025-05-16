@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.Domain.UnitTests", "test\Bookify.Domain.UnitTests\Bookify.Domain.UnitTests.csproj", "{3C54E084-C3EE-4560-96CD-E95ED4C1CB69}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookify.Application.UnitTests", "test\Bookify.Application.UnitTests\Bookify.Application.UnitTests.csproj", "{0346629B-A65F-473F-B4EB-F3A9A6DFC444}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,6 +33,7 @@ Global
 		{6FA65A9A-34DF-4D5F-97BE-A279BDEE4FFC} = {E9F3615A-EE13-400E-98D0-C74A5A3E05E1}
 		{0FD47587-D528-4C46-A184-8F77CB73ADAB} = {E9F3615A-EE13-400E-98D0-C74A5A3E05E1}
 		{3C54E084-C3EE-4560-96CD-E95ED4C1CB69} = {11535F1D-941F-44B1-BA2B-EA921F79A7BA}
+		{0346629B-A65F-473F-B4EB-F3A9A6DFC444} = {11535F1D-941F-44B1-BA2B-EA921F79A7BA}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8F5AD145-CD03-452C-A717-A9F91877054D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -53,5 +56,9 @@ Global
 		{3C54E084-C3EE-4560-96CD-E95ED4C1CB69}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C54E084-C3EE-4560-96CD-E95ED4C1CB69}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C54E084-C3EE-4560-96CD-E95ED4C1CB69}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0346629B-A65F-473F-B4EB-F3A9A6DFC444}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0346629B-A65F-473F-B4EB-F3A9A6DFC444}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0346629B-A65F-473F-B4EB-F3A9A6DFC444}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0346629B-A65F-473F-B4EB-F3A9A6DFC444}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
