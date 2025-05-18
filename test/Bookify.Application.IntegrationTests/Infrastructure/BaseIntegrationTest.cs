@@ -10,14 +10,14 @@ public class BaseIntegrationTest : IClassFixture<IntegrationTestWebFactory>
 {
     private readonly IServiceScope _scope;
     protected readonly ISender Sender;
-    protected readonly AppDbContext DbContext;
+    protected readonly AppDbContext AppDbContext;
     protected readonly IUnitOfWork UnitOfWork;
 
     protected BaseIntegrationTest(IntegrationTestWebFactory factory)
     {
         _scope = factory.Services.CreateScope();
         Sender = _scope.ServiceProvider.GetRequiredService<ISender>();
-        DbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        AppDbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
         UnitOfWork = _scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
     }
 }

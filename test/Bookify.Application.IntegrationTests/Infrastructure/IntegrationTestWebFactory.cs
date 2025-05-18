@@ -1,3 +1,4 @@
+using Bookify.Application.Abstractions.Authentication;
 using Bookify.Application.Abstractions.Data;
 using Bookify.Infrastructure;
 using Bookify.Infrastructure.Authentication;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using NSubstitute;
 using Testcontainers.Keycloak;
 using Testcontainers.PostgreSql;
 using Testcontainers.Redis;
@@ -44,7 +46,8 @@ public class IntegrationTestWebFactory : WebApplicationFactory<Program>, IAsyncL
             // Database
             services.RemoveAll<DbContextOptions<AppDbContext>>();
 
-            var dbConnectionString = _dbContainer.GetConnectionString();
+            var dbConnectionString =
+                _dbContainer.GetConnectionString() + ";Include Error Detail=true";
             services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseNpgsql(dbConnectionString);
@@ -72,6 +75,13 @@ public class IntegrationTestWebFactory : WebApplicationFactory<Program>, IAsyncL
                 options.TokenUrl =
                     $"{keycloakAddress}/realms/bookify/protocol/openid-connect/token";
             });
+
+            // UserContext
+            var userContextMock = Substitute.For<IUserContext>();
+            userContextMock.UserId.Returns(Guid.CreateVersion7());
+
+            services.RemoveAll<IUserContext>();
+            services.AddSingleton(userContextMock);
         });
     }
 
