@@ -16,13 +16,13 @@ public sealed class UserRepresentationModel
 
     public string[] DisableableCredentialTypes { get; set; }
 
-    public string Email { get; set; }
+    public string Email { get; set; } = string.Empty;
 
     public bool? EmailVerified { get; set; }
 
     public bool? Enabled { get; set; }
 
-    public string FederationLink { get; set; }
+    public string FederationLink { get; set; } = string.Empty;
 
     public string Id { get; set; }
 
@@ -57,6 +57,6 @@ public sealed class UserRepresentationModel
             EmailVerified = true,
             CreatedTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds(),
             Attributes = new Dictionary<string, List<string>>(),
-            RequiredActions = Array.Empty<string>()
+            RequiredActions = Array.Empty<string>(),
         };
 }

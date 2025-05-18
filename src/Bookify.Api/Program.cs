@@ -59,7 +59,7 @@ if (app.Environment.IsDevelopment())
         ];
     });
     app.ApplyMigrations();
-    // app.SeedData();
+    app.SeedData();
 }
 
 app.MapHealthChecks(
@@ -68,3 +68,5 @@ app.MapHealthChecks(
 );
 
 app.Run();
+
+public partial class Program;
