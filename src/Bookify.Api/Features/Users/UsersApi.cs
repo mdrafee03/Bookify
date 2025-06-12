@@ -18,7 +18,7 @@ public sealed class UsersApi : ICarterModule
         var users = app.MapGroup("users");
 
         users.MapGet("/", GetAllUsers)
-            .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
+            .RequireAuthorization();
         users
             .MapGet("/me", GetLoggedInUser)
             .RequireAuthorization(policy => policy.RequireAuthenticatedUser());

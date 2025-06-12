@@ -1,7 +1,7 @@
 using Asp.Versioning;
-using Bookify.Api;
 using Bookify.Api.Extensions;
 using Bookify.Application;
+using Bookify.Aspire.ServiceDefaults;
 using Bookify.Infrastructure;
 using Carter;
 using HealthChecks.UI.Client;
@@ -11,6 +11,8 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddServiceDefaults();
+
 builder.Host.UseSerilog(
     ((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration))
 );
@@ -19,7 +21,7 @@ builder.Services.AddOpenApi("v1");
 builder.Services.AddOpenApi("v2");
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.AddInfrastructure();
 
 builder.Services.AddCarter();
 
@@ -61,11 +63,6 @@ if (app.Environment.IsDevelopment())
     app.ApplyMigrations();
     app.SeedData();
 }
-
-app.MapHealthChecks(
-    "/health",
-    new HealthCheckOptions { ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse }
-);
 
 app.Run();
 

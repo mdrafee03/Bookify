@@ -11,7 +11,7 @@ public sealed class ApartmentsApi : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        var apartments = app.MapGroup("apartments").RequireAuthorization();
+        var apartments = app.MapGroup("apartments");
 
         apartments.MapGet("/searchApartments", SearchApartment);
     }

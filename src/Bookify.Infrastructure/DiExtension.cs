@@ -20,9 +20,11 @@ using Dapper;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Quartz;
 using AuthenticationOptions = Bookify.Infrastructure.Authentication.AuthenticationOptions;
@@ -33,41 +35,40 @@ namespace Bookify.Infrastructure;
 
 public static class DiExtension
 {
-    public static IServiceCollection AddInfrastructure(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
+    public static void AddInfrastructure(this WebApplicationBuilder builder)
     {
+        var services = builder.Services;
+        var configuration = builder.Configuration;
+        
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<IEmailService, EmailService>();
 
-        AddPersistence(services, configuration);
+        AddPersistence(builder, configuration);
 
         AddAuthentication(services, configuration);
 
         AddAuthorizationServices(services);
 
-        AddCaching(services, configuration);
-
-        AddHealthChecks(services, configuration);
+        AddCaching(builder, configuration);
 
         AddApiVersioning(services);
 
         AddBackgroundJobs(services, configuration);
-
-        return services;
     }
 
-    private static void AddPersistence(IServiceCollection services, IConfiguration configuration)
+    private static void AddPersistence(this WebApplicationBuilder builder, IConfiguration configuration)
     {
+        var services = builder.Services;
         var connectionString =
-            configuration.GetConnectionString("Database")
+            configuration.GetConnectionString("bookify")
             ?? throw new ArgumentNullException(nameof(configuration));
-
+        
         services.AddDbContext<AppDbContext>(options =>
         {
             options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
         });
+        
+        builder.EnrichNpgsqlDbContext<AppDbContext>();
 
         services.AddScoped<IUserRepository, UserRepository>();
 
@@ -86,7 +87,7 @@ public static class DiExtension
 
     private static void AddAuthentication(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+        services.AddAuthentication().AddKeycloakJwtBearer("keycloak", "bookify");
 
         services.Configure<AuthenticationOptions>(configuration.GetSection("Authentication"));
 
@@ -135,30 +136,11 @@ public static class DiExtension
         services.AddAuthorization();
     }
 
-    private static void AddCaching(this IServiceCollection services, IConfiguration configuration)
+    private static void AddCaching(this WebApplicationBuilder builder, IConfiguration configuration)
     {
-        var redisConnectionString =
-            configuration.GetConnectionString("Redis")
-            ?? throw new ArgumentNullException(nameof(configuration));
-        services.AddStackExchangeRedisCache(options =>
-        {
-            options.Configuration = redisConnectionString;
-        });
+        builder.AddRedisDistributedCache(connectionName: "cache");
 
-        services.AddScoped<ICacheService, CacheService>();
-    }
-
-    private static void AddHealthChecks(
-        this IServiceCollection services,
-        IConfiguration configuration
-    )
-    {
-        services
-            .AddHealthChecks()
-            .AddNpgSql(configuration.GetConnectionString("Database")!)
-            .AddRedis(configuration.GetConnectionString("Redis")!)
-            .AddUrlGroup(new Uri(configuration["Keycloak:BaseUrl"]!), HttpMethod.Get, "keyCloak")
-            .AddUrlGroup(new Uri(configuration["Seq:Url"]!), HttpMethod.Get, "Seq");
+        builder.Services.AddScoped<ICacheService, CacheService>();
     }
 
     private static void AddApiVersioning(this IServiceCollection services)

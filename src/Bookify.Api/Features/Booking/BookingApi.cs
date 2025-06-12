@@ -21,10 +21,10 @@ public sealed class BookingApi : ICarterModule
         bookings.MapGet("/{bookingId:guid}", GetBooking).MapToApiVersion(1);
         bookings.MapGet("/{bookingId:guid}", GetBookingV2).MapToApiVersion(2);
         bookings.MapPost("/reserve-booking", ReserveBooking);
-        bookings.MapPost("/confirm-booking", ConfirmBooking).RequireAuthorization();
-        bookings.MapPost("/reject-booking", RejectBooking).RequireAuthorization();
-        bookings.MapPost("/cancel-booking", CancelBooking).RequireAuthorization();
-        bookings.MapPost("/complete-booking", CompleteBooking).RequireAuthorization();
+        bookings.MapPost("/confirm-booking", ConfirmBooking);
+        bookings.MapPost("/reject-booking", RejectBooking);
+        bookings.MapPost("/cancel-booking", CancelBooking);
+        bookings.MapPost("/complete-booking", CompleteBooking);
     }
 
     private static async Task<Results<Ok<BookingResponse>, NotFound<Error>>> GetBooking(
