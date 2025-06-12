@@ -1,3 +1,5 @@
+using Bookify.Aspire.AppHost;
+
 var builder = DistributedApplication.CreateBuilder(args);
 
 var dbuserName = builder.AddParameter("db-username", secret: false);
@@ -28,5 +30,9 @@ builder
     .WithReference(postgres)
     .WithReference(cache)
     .WithReference(keycloak)
-    .WithReference(seq);
+    .WithReference(seq)
+    .WithSwaggerUI()
+    .WithScalar()
+    .WithReDoc();
+
 builder.Build().Run();

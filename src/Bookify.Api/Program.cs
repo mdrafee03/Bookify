@@ -49,6 +49,16 @@ app.MapGroup("/v{version:apiVersion}").WithApiVersionSet(versionSet).MapCarter()
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+    
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/openapi/v1.json", "OpenAPI V1");
+    });
+
+    app.UseReDoc(options =>
+    {
+        options.SpecUrl("/openapi/v1.json");
+    });
 
     app.MapScalarApiReference(options =>
     {
@@ -57,7 +67,6 @@ if (app.Environment.IsDevelopment())
         options.Servers =
         [
             new ScalarServer("https://localhost:7039"),
-            new ScalarServer("http://localhost:5150"),
         ];
     });
     app.ApplyMigrations();
