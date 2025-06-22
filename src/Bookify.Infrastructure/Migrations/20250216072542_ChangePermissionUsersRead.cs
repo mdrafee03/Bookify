@@ -12,14 +12,16 @@ namespace Bookify.Infrastructure.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "fk_permission_user_permission_permissions_id",
-                table: "permission_user");
+                table: "permission_user"
+            );
 
             migrationBuilder.UpdateData(
                 table: "permissions",
                 keyColumn: "id",
                 keyValue: 1,
                 column: "name",
-                value: "Users:Read");
+                value: "Users:Read"
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "fk_permission_user_permissions_permissions_id",
@@ -27,7 +29,8 @@ namespace Bookify.Infrastructure.Migrations
                 column: "permissions_id",
                 principalTable: "permissions",
                 principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Cascade
+            );
         }
 
         /// <inheritdoc />
@@ -35,14 +38,16 @@ namespace Bookify.Infrastructure.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "fk_permission_user_permissions_permissions_id",
-                table: "permission_user");
+                table: "permission_user"
+            );
 
             migrationBuilder.UpdateData(
                 table: "permissions",
                 keyColumn: "id",
                 keyValue: 1,
                 column: "name",
-                value: "UsersRead");
+                value: "UsersRead"
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "fk_permission_user_permission_permissions_id",
@@ -50,7 +55,8 @@ namespace Bookify.Infrastructure.Migrations
                 column: "permissions_id",
                 principalTable: "permissions",
                 principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Cascade
+            );
         }
     }
 }

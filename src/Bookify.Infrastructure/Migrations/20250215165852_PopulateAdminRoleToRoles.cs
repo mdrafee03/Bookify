@@ -12,12 +12,14 @@ namespace Bookify.Infrastructure.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "fk_role_user_role_user_roles_id",
-                table: "role_user");
+                table: "role_user"
+            );
 
             migrationBuilder.InsertData(
                 table: "roles",
                 columns: new[] { "id", "name" },
-                values: new object[] { 2, "Admin" });
+                values: new object[] { 2, "Admin" }
+            );
 
             migrationBuilder.AddForeignKey(
                 name: "fk_role_user_roles_user_roles_id",
@@ -25,7 +27,8 @@ namespace Bookify.Infrastructure.Migrations
                 column: "user_roles_id",
                 principalTable: "roles",
                 principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Cascade
+            );
         }
 
         /// <inheritdoc />
@@ -33,12 +36,10 @@ namespace Bookify.Infrastructure.Migrations
         {
             migrationBuilder.DropForeignKey(
                 name: "fk_role_user_roles_user_roles_id",
-                table: "role_user");
+                table: "role_user"
+            );
 
-            migrationBuilder.DeleteData(
-                table: "roles",
-                keyColumn: "id",
-                keyValue: 2);
+            migrationBuilder.DeleteData(table: "roles", keyColumn: "id", keyValue: 2);
 
             migrationBuilder.AddForeignKey(
                 name: "fk_role_user_role_user_roles_id",
@@ -46,7 +47,8 @@ namespace Bookify.Infrastructure.Migrations
                 column: "user_roles_id",
                 principalTable: "roles",
                 principalColumn: "id",
-                onDelete: ReferentialAction.Cascade);
+                onDelete: ReferentialAction.Cascade
+            );
         }
     }
 }

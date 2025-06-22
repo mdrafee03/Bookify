@@ -41,7 +41,6 @@ public class Result<TValue> : Result
     public Result(TValue value, bool isSuccess, Error error)
         : base(isSuccess, error) => _value = value;
 
-
     [NotNull]
     public TValue Value =>
         IsSuccess

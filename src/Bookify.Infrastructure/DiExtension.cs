@@ -39,7 +39,7 @@ public static class DiExtension
     {
         var services = builder.Services;
         var configuration = builder.Configuration;
-        
+
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<IEmailService, EmailService>();
 
@@ -56,18 +56,21 @@ public static class DiExtension
         AddBackgroundJobs(services, configuration);
     }
 
-    private static void AddPersistence(this WebApplicationBuilder builder, IConfiguration configuration)
+    private static void AddPersistence(
+        this WebApplicationBuilder builder,
+        IConfiguration configuration
+    )
     {
         var services = builder.Services;
         var connectionString =
             configuration.GetConnectionString("bookify")
             ?? throw new ArgumentNullException(nameof(configuration));
-        
+
         services.AddDbContext<AppDbContext>(options =>
         {
             options.UseNpgsql(connectionString).UseSnakeCaseNamingConvention();
         });
-        
+
         builder.EnrichNpgsqlDbContext<AppDbContext>();
 
         services.AddScoped<IUserRepository, UserRepository>();

@@ -17,8 +17,7 @@ public sealed class UsersApi : ICarterModule
     {
         var users = app.MapGroup("users");
 
-        users.MapGet("/", GetAllUsers)
-            .RequireAuthorization();
+        users.MapGet("/", GetAllUsers);
         users
             .MapGet("/me", GetLoggedInUser)
             .RequireAuthorization(policy => policy.RequireAuthenticatedUser());
@@ -30,7 +29,6 @@ public sealed class UsersApi : ICarterModule
         users
             .MapPut("/assign-permissions", AssignUserPermissions)
             .RequireAuthorization(policy => policy.RequireRole(Roles.Admin));
-        
     }
 
     private static async Task<Results<Ok<UserResponse>, BadRequest<Error>>> GetLoggedInUser(
@@ -121,7 +119,7 @@ public sealed class UsersApi : ICarterModule
 
         return TypedResults.NoContent();
     }
-    
+
     private static async Task<IResult> GetAllUsers(
         ISender sender,
         CancellationToken cancellationToken

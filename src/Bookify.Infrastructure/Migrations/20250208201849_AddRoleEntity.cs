@@ -16,21 +16,30 @@ namespace Bookify.Infrastructure.Migrations
                 name: "roles",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false)
+                    id = table
+                        .Column<int>(type: "integer", nullable: false)
+                        .Annotation(
+                            "Npgsql:ValueGenerationStrategy",
+                            NpgsqlValueGenerationStrategy.IdentityByDefaultColumn
+                        ),
+                    name = table.Column<string>(
+                        type: "character varying(20)",
+                        maxLength: 20,
+                        nullable: false
+                    ),
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_roles", x => x.id);
-                });
+                }
+            );
 
             migrationBuilder.CreateTable(
                 name: "role_user",
                 columns: table => new
                 {
                     user_roles_id = table.Column<int>(type: "integer", nullable: false),
-                    users_id = table.Column<Guid>(type: "uuid", nullable: false)
+                    users_id = table.Column<Guid>(type: "uuid", nullable: false),
                 },
                 constraints: table =>
                 {
@@ -40,34 +49,37 @@ namespace Bookify.Infrastructure.Migrations
                         column: x => x.user_roles_id,
                         principalTable: "roles",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Cascade
+                    );
                     table.ForeignKey(
                         name: "fk_role_user_users_users_id",
                         column: x => x.users_id,
                         principalTable: "users",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
+                        onDelete: ReferentialAction.Cascade
+                    );
+                }
+            );
 
             migrationBuilder.InsertData(
                 table: "roles",
                 columns: new[] { "id", "name" },
-                values: new object[] { 1, "Registered" });
+                values: new object[] { 1, "Registered" }
+            );
 
             migrationBuilder.CreateIndex(
                 name: "ix_role_user_users_id",
                 table: "role_user",
-                column: "users_id");
+                column: "users_id"
+            );
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "role_user");
+            migrationBuilder.DropTable(name: "role_user");
 
-            migrationBuilder.DropTable(
-                name: "roles");
+            migrationBuilder.DropTable(name: "roles");
         }
     }
 }

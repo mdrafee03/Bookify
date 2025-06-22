@@ -23,14 +23,27 @@ builder.Services.AddOpenApi("v2");
 builder.Services.AddApplication();
 builder.AddInfrastructure();
 
+builder.Services.AddCors(options =>
+    options.AddPolicy(
+        "CorsPolicy",
+        corsPolicyBuilder =>
+        {
+            corsPolicyBuilder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin();
+        }
+    )
+);
+
 builder.Services.AddCarter();
 
 var app = builder.Build();
 
+app.UseCors("CorsPolicy");
+
 app.UseHttpsRedirection();
 
-// app.UseSerilogRequestLogging();
-app.UseRequestContextLogging();
+app.UseSerilogRequestLogging();
+
+// app.UseRequestContextLogging();
 
 app.UseCustomExceptionHandler();
 
@@ -49,7 +62,7 @@ app.MapGroup("/v{version:apiVersion}").WithApiVersionSet(versionSet).MapCarter()
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    
+
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/openapi/v1.json", "OpenAPI V1");
@@ -64,10 +77,7 @@ if (app.Environment.IsDevelopment())
     {
         options.WithTheme(ScalarTheme.Mars);
 
-        options.Servers =
-        [
-            new ScalarServer("https://localhost:7039"),
-        ];
+        options.Servers = [new ScalarServer("https://localhost:7039")];
     });
     app.ApplyMigrations();
     app.SeedData();
