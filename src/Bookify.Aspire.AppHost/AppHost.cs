@@ -32,6 +32,22 @@ var seq = builder
     .WithLifetime(ContainerLifetime.Persistent)
     .WithEnvironment("ACCEPT_EULA", "Y");
 
+var prometheus = builder
+    .AddContainer("prometheus", "prom/prometheus")
+    .WithBindMount("../../prometheus", "/etc/prometheus", isReadOnly: true)
+    .WithArgs("--config.file=/etc/prometheus/prometheus.yml")
+    .WithHttpEndpoint(9090, name: "prometheus", targetPort: 9090)
+    .WithLifetime(ContainerLifetime.Persistent);
+
+var grafana = builder
+    .AddContainer("grafana", "grafana/grafana")
+    .WithBindMount("../../grafana/config", "/etc/grafana", isReadOnly: true)
+    .WithBindMount("../../grafana/dashboards", "/var/lib/grafana/dashboards", isReadOnly: true)
+    .WithEnvironment("PROMETHEUS_ENDPOINT", prometheus.GetEndpoint("prometheus"))
+    .WithHttpEndpoint(3000, name: "grafana", targetPort: 3000)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WaitFor(prometheus);
+
 var api = builder
     .AddProject<Projects.Bookify_Api>("BookifyApi")
     .WithReference(postgres)
@@ -42,6 +58,8 @@ var api = builder
     .WaitFor(cache)
     .WaitFor(keycloak)
     .WaitFor(seq)
+    .WaitFor(prometheus)
+    .WaitFor(grafana)
     .WithSwaggerUI()
     .WithScalar()
     .WithReDoc()

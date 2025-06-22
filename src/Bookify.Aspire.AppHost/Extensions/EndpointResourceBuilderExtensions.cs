@@ -29,7 +29,7 @@ internal static class EndpointResourceBuilderExtensions
     {
         return builder.WithUrls(context =>
         {
-            var httpsEndpoint = context.GetEndpoint("http");
+            var httpsEndpoint = context.GetHttpEndpoint();
             if (httpsEndpoint?.Url == null)
             {
                 throw new InvalidOperationException("No HTTPS endpoint found for the resource.");
@@ -43,5 +43,20 @@ internal static class EndpointResourceBuilderExtensions
                 }
             );
         });
+    }
+
+    private static EndpointReference? GetHttpEndpoint(this ResourceUrlsCallbackContext context)
+    {
+        if (context.GetEndpoint("https") is { Exists: true } httpsEndpoint)
+        {
+            return httpsEndpoint;
+        }
+
+        if (context.GetEndpoint("http") is { Exists: true } endpoint)
+        {
+            return endpoint;
+        }
+
+        return null;
     }
 }

@@ -120,7 +120,7 @@ public sealed class UsersApi : ICarterModule
         return TypedResults.NoContent();
     }
 
-    private static async Task<IResult> GetAllUsers(
+    private static async Task<Results<Ok<List<UserResponse>>, BadRequest<Error>>> GetAllUsers(
         ISender sender,
         CancellationToken cancellationToken
     )

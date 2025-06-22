@@ -59,6 +59,8 @@ var versionSet = app.NewApiVersionSet()
 
 app.MapGroup("/v{version:apiVersion}").WithApiVersionSet(versionSet).MapCarter();
 
+app.MapDefaultEndpoints();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
